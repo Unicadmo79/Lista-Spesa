@@ -6,7 +6,6 @@
   <title>Lista della Spesa — Reset Infiammatorio</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
       background: #f0f7f0;
@@ -14,212 +13,132 @@
       padding: 1rem;
       color: #1a1a1a;
     }
-
     .container {
       max-width: 600px;
       margin: 0 auto;
-      background: #ffffff;
+      background: #fff;
       border-radius: 14px;
       border: 1px solid #c8e6c9;
       overflow: hidden;
       box-shadow: 0 2px 12px rgba(46,125,50,0.07);
     }
-
     .header {
-      padding: 1.5rem 1.5rem 1rem;
+      padding: 1.25rem 1.25rem 0.75rem;
       border-bottom: 1px solid #e8f5e9;
       background: linear-gradient(135deg, #f9fff9 0%, #f0f7f0 100%);
     }
-    .header-top {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 4px;
-    }
+    .header-top { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
     .header-icon {
-      width: 32px;
-      height: 32px;
-      background: #2E7D32;
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
+      width: 32px; height: 32px; background: #2E7D32;
+      border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
     }
     .header-icon svg { width: 18px; height: 18px; fill: white; }
-    .header h1 {
-      font-size: 17px;
-      font-weight: 600;
-      color: #1a1a1a;
-      letter-spacing: -0.01em;
-    }
-    .header p {
-      font-size: 12px;
-      color: #6a8f6b;
-      margin-top: 2px;
-      padding-left: 42px;
-    }
+    .header h1 { font-size: 17px; font-weight: 600; color: #1a1a1a; letter-spacing: -0.01em; }
+    .header p { font-size: 12px; color: #6a8f6b; margin-top: 2px; padding-left: 42px; }
 
     .tabs {
-      display: flex;
-      gap: 6px;
-      padding: 1rem 1.5rem 0;
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      display: flex; gap: 5px;
+      padding: 0.75rem 1.25rem 0;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+      scroll-snap-type: x mandatory; padding-bottom: 2px;
     }
-    .tabs::-webkit-scrollbar { display: none; }
-
+    .tabs::-webkit-scrollbar { height: 3px; }
+    .tabs::-webkit-scrollbar-thumb { background: #c8e6c9; border-radius: 2px; }
     .tab {
-      padding: 7px 14px;
-      border-radius: 8px;
-      font-size: 13px;
-      font-weight: 500;
-      cursor: pointer;
-      border: 1px solid #c8e6c9;
-      background: #fff;
-      color: #5a8a5b;
-      white-space: nowrap;
-      transition: all 0.15s;
-      -webkit-tap-highlight-color: transparent;
+      padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 500;
+      cursor: pointer; border: 1px solid #c8e6c9; background: #fff; color: #5a8a5b;
+      white-space: nowrap; transition: all 0.15s; -webkit-tap-highlight-color: transparent;
+      scroll-snap-align: start; flex-shrink: 0;
     }
-    .tab.active {
-      background: #2E7D32;
-      color: #fff;
-      border-color: #2E7D32;
-    }
+    .tab.active { background: #2E7D32; color: #fff; border-color: #2E7D32; }
     .tab:hover:not(.active) { background: #f0f7f0; border-color: #a5d6a7; }
 
-    .week-content { padding: 1rem 1.5rem 1.5rem; }
-
+    .week-content { padding: 1rem 1.25rem 1.25rem; }
     .week-header { margin-bottom: 0.75rem; }
     .week-title { font-size: 15px; font-weight: 600; color: #1a1a1a; }
     .week-sub { font-size: 12px; color: #8faa8f; font-style: italic; margin-top: 3px; line-height: 1.4; }
 
     .progress-wrap { margin: 10px 0 1.25rem; }
-    .progress-bar {
-      height: 4px;
-      background: #e8f5e9;
-      border-radius: 4px;
-    }
-    .progress-fill {
-      height: 100%;
-      background: linear-gradient(90deg, #2E7D32, #66bb6a);
-      border-radius: 4px;
-      transition: width 0.4s ease;
-    }
-    .progress-label {
-      font-size: 11px;
-      color: #2E7D32;
-      font-weight: 500;
-      margin-top: 4px;
-      text-align: right;
-    }
+    .progress-bar { height: 4px; background: #e8f5e9; border-radius: 4px; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, #2E7D32, #66bb6a); border-radius: 4px; transition: width 0.4s ease; }
+    .progress-label { font-size: 11px; color: #2E7D32; font-weight: 500; margin-top: 4px; text-align: right; }
 
     .category { margin-bottom: 1.25rem; }
-    .cat-label {
-      font-size: 10px;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: #2E7D32;
-      margin-bottom: 6px;
-      padding-bottom: 5px;
-      border-bottom: 1.5px solid #e8f5e9;
-    }
+    .cat-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; padding-bottom: 5px; border-bottom: 1.5px solid #e8f5e9; }
+    .cat-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #2E7D32; }
+    .cat-count { font-size: 10px; color: #a5c4a6; font-weight: 500; }
+    .cat-count.done { color: #2E7D32; }
 
     .item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 6px 8px;
-      cursor: pointer;
-      border-radius: 6px;
-      transition: background 0.1s;
-      -webkit-tap-highlight-color: transparent;
-      user-select: none;
+      display: flex; align-items: center; gap: 10px; padding: 6px 8px;
+      cursor: pointer; border-radius: 6px; transition: background 0.1s;
+      -webkit-tap-highlight-color: transparent; user-select: none;
     }
     .item:hover { background: #f9fff9; }
     .item:active { background: #f0f7f0; }
-
     .checkbox {
-      width: 18px;
-      height: 18px;
-      border: 1.5px solid #a5d6a7;
-      border-radius: 4px;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s;
-      background: #fff;
+      width: 18px; height: 18px; border: 1.5px solid #a5d6a7; border-radius: 4px;
+      flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+      transition: all 0.15s; background: #fff;
     }
-    .checkbox.checked {
-      background: #2E7D32;
-      border-color: #2E7D32;
-    }
+    .checkbox.checked { background: #2E7D32; border-color: #2E7D32; }
     .checkbox.checked::after {
-      content: '';
-      width: 9px;
-      height: 5px;
-      border-left: 2px solid #fff;
-      border-bottom: 2px solid #fff;
-      transform: rotate(-45deg) translate(1px, -1px);
-      display: block;
+      content: ''; width: 9px; height: 5px;
+      border-left: 2px solid #fff; border-bottom: 2px solid #fff;
+      transform: rotate(-45deg) translate(1px, -1px); display: block;
     }
-
-    .item-text {
-      font-size: 14px;
-      color: #333;
-      line-height: 1.4;
-      transition: color 0.15s;
-      flex: 1;
-    }
-    .item-text.checked {
-      text-decoration: line-through;
-      color: #b0c4b1;
-    }
-
+    .item-text { font-size: 14px; color: #333; line-height: 1.4; transition: color 0.15s; flex: 1; }
+    .item-text.checked { color: #b0c4b1; }
+    .cart-icon { font-size: 13px; flex-shrink: 0; opacity: 0; transition: opacity 0.2s; }
+    .item.done .cart-icon { opacity: 1; }
     .new-badge {
-      font-size: 10px;
-      color: #2E7D32;
-      background: #e8f5e9;
-      border: 1px solid #c8e6c9;
-      border-radius: 4px;
-      padding: 1px 6px;
-      flex-shrink: 0;
+      font-size: 10px; color: #2E7D32; background: #e8f5e9;
+      border: 1px solid #c8e6c9; border-radius: 4px; padding: 1px 6px;
+      flex-shrink: 0; white-space: nowrap; font-weight: 500;
+    }
+
+    .actions {
+      display: flex; gap: 8px; padding: 0.75rem 1.25rem;
+      border-top: 1px solid #e8f5e9; background: #f9fff9;
+      flex-wrap: wrap;
+    }
+    .btn {
+      flex: 1; min-width: 0; padding: 8px 10px; border-radius: 8px; font-size: 12px;
+      font-weight: 500; cursor: pointer; border: 1px solid #c8e6c9;
+      background: #fff; color: #2E7D32; font-family: inherit;
+      transition: all 0.15s; display: flex; align-items: center; justify-content: center; gap: 5px;
       white-space: nowrap;
-      font-weight: 500;
     }
+    .btn:hover { background: #e8f5e9; }
+    .btn:active { background: #c8e6c9; }
+    .btn-icon { font-size: 14px; }
+    .btn-reset { color: #888; border-color: #e0e0e0; }
+    .btn-reset:hover { background: #f5f5f5; color: #333; }
 
-    .footer {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.75rem 1.5rem;
-      border-top: 1px solid #e8f5e9;
-      background: #f9fff9;
-    }
-    .count { font-size: 12px; color: #6a8f6b; }
-    .reset-btn {
-      font-size: 12px;
-      color: #6a8f6b;
-      cursor: pointer;
-      border: none;
-      background: none;
-      padding: 4px 10px;
-      border-radius: 6px;
-      font-family: inherit;
-      border: 1px solid #c8e6c9;
-      transition: all 0.15s;
-    }
-    .reset-btn:hover { background: #e8f5e9; color: #2E7D32; }
+    .footer { padding: 0.5rem 1.25rem; display: flex; justify-content: space-between; align-items: center; }
+    .count { font-size: 11px; color: #6a8f6b; }
 
-    .branding {
-      text-align: center;
-      padding: 1rem;
-      font-size: 11px;
-      color: #a5c4a6;
-      letter-spacing: 0.05em;
+    .toast {
+      position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+      background: #2E7D32; color: #fff; padding: 8px 16px;
+      border-radius: 20px; font-size: 13px; font-weight: 500;
+      opacity: 0; transition: opacity 0.3s; pointer-events: none; z-index: 100;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; }
+
+    .branding { text-align: center; padding: 0.75rem; font-size: 11px; color: #a5c4a6; letter-spacing: 0.05em; }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .container { box-shadow: none; border: none; border-radius: 0; }
+      .tabs, .actions, .footer, .branding, .new-badge { display: none !important; }
+      .week-content { padding: 0; }
+      .item { padding: 4px 0; }
+      .item:hover { background: none; }
+      .checkbox { border-color: #999; }
+      .checkbox.checked { background: #2E7D32; }
+      .cat-label { color: #2E7D32; }
     }
   </style>
 </head>
@@ -229,7 +148,7 @@
   <div class="header">
     <div class="header-top">
       <div class="header-icon">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 7H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2zm0 12H5V9h14v10zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zM7 3h2v3H7zm4 0h2v3h-2zm4 0h2v3h-2z"/></svg>
+        <svg viewBox="0 0 24 24"><path d="M19 7H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2zm0 12H5V9h14v10zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zM7 3h2v3H7zm4 0h2v3h-2zm4 0h2v3h-2z"/></svg>
       </div>
       <h1>Lista della spesa</h1>
     </div>
@@ -238,13 +157,20 @@
 
   <div class="tabs" id="tabs"></div>
   <div class="week-content" id="content"></div>
+
+  <div class="actions">
+    <button class="btn" onclick="shareList()"><span class="btn-icon">↗</span> Condividi</button>
+    <button class="btn" onclick="printList()"><span class="btn-icon">⎙</span> Stampa</button>
+    <button class="btn btn-reset" onclick="resetWeek()"><span class="btn-icon">↺</span> Azzera</button>
+  </div>
+
   <div class="footer">
     <span class="count" id="count"></span>
-    <button class="reset-btn" onclick="resetWeek()">Azzera spunta</button>
   </div>
 </div>
 
 <div class="branding">Reset Infiammatorio</div>
+<div class="toast" id="toast"></div>
 
 <script>
 const weeks = [
@@ -307,7 +233,16 @@ const weeks = [
 ];
 
 let currentWeek = 0;
-const checked = {};
+const STORAGE_KEY = 'reset-spesa-v1';
+
+function loadChecked() {
+  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
+}
+function saveChecked() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(checked)); } catch(e) {}
+}
+
+let checked = loadChecked();
 
 function getKey(w,c,i){ return w+'-'+c+'-'+i; }
 
@@ -317,6 +252,19 @@ function getAllKeys(){
     cat.items.forEach(function(_,ii){ keys.push(getKey(currentWeek,ci,ii)); });
   });
   return keys;
+}
+
+function getCatKeys(ci){
+  var w=weeks[currentWeek], keys=[];
+  w.categories[ci].items.forEach(function(_,ii){ keys.push(getKey(currentWeek,ci,ii)); });
+  return keys;
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function(){ t.classList.remove('show'); }, 2000);
 }
 
 function renderTabs(){
@@ -337,16 +285,23 @@ function renderContent(){
   html+='</div>';
 
   w.categories.forEach(function(cat,ci){
-    html+='<div class="category"><div class="cat-label">'+cat.name+'</div>';
+    var catKeys=getCatKeys(ci);
+    var catDone=catKeys.filter(function(k){return checked[k];}).length;
+    var catTotal=catKeys.length;
+    var allDone=catDone===catTotal;
+    html+='<div class="category">';
+    html+='<div class="cat-header"><div class="cat-label">'+cat.name+'</div>';
+    html+='<div class="cat-count'+(allDone?' done':'')+'">'+catDone+'/'+catTotal+'</div></div>';
     cat.items.forEach(function(item,ii){
       var text=typeof item==='string'?item:item.t;
       var isNew=typeof item==='object'&&item.n;
       var key=getKey(currentWeek,ci,ii);
       var ok=!!checked[key];
-      html+='<div class="item" onclick="toggle(\''+key+'\')">';
+      html+='<div class="item'+(ok?' done':'')+'" onclick="toggle(\''+key+'\')">';
       html+='<div class="checkbox '+(ok?'checked':'')+'"></div>';
       html+='<span class="item-text '+(ok?'checked':'')+'">'+text+'</span>';
       if(isNew) html+='<span class="new-badge">✦ nuovo</span>';
+      html+='<span class="cart-icon">🛒</span>';
       html+='</div>';
     });
     html+='</div>';
@@ -356,9 +311,38 @@ function renderContent(){
   document.getElementById('count').textContent=n+' di '+allKeys.length+' selezionati';
 }
 
-function toggle(key){ checked[key]=!checked[key]; renderContent(); }
+function toggle(key){
+  checked[key]=!checked[key];
+  saveChecked();
+  renderContent();
+}
+
 function selectWeek(i){ currentWeek=i; renderTabs(); renderContent(); }
-function resetWeek(){ getAllKeys().forEach(function(k){delete checked[k];}); renderContent(); }
+
+function resetWeek(){
+  getAllKeys().forEach(function(k){delete checked[k];});
+  saveChecked();
+  renderContent();
+  showToast('Lista azzerata');
+}
+
+function shareList(){
+  var url = window.location.href;
+  if(navigator.share){
+    navigator.share({ title: 'Lista della spesa — Reset Infiammatorio', url: url })
+      .catch(function(){});
+  } else {
+    navigator.clipboard.writeText(url).then(function(){
+      showToast('Link copiato!');
+    }).catch(function(){
+      showToast('Copia questo link: '+url);
+    });
+  }
+}
+
+function printList(){
+  window.print();
+}
 
 renderTabs();
 renderContent();
