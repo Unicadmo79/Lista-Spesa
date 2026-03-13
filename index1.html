@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lista della Spesa — Reset Infiammatorio</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      background: #f0f7f0;
+      min-height: 100vh;
+      padding: 1rem;
+      color: #1a1a1a;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 14px;
+      border: 1px solid #c8e6c9;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(46,125,50,0.07);
+    }
+
+    .header {
+      padding: 1.5rem 1.5rem 1rem;
+      border-bottom: 1px solid #e8f5e9;
+      background: linear-gradient(135deg, #f9fff9 0%, #f0f7f0 100%);
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+    .header-icon {
+      width: 32px;
+      height: 32px;
+      background: #2E7D32;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .header-icon svg { width: 18px; height: 18px; fill: white; }
+    .header h1 {
+      font-size: 17px;
+      font-weight: 600;
+      color: #1a1a1a;
+      letter-spacing: -0.01em;
+    }
+    .header p {
+      font-size: 12px;
+      color: #6a8f6b;
+      margin-top: 2px;
+      padding-left: 42px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      padding: 1rem 1.5rem 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+
+    .tab {
+      padding: 7px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      border: 1px solid #c8e6c9;
+      background: #fff;
+      color: #5a8a5b;
+      white-space: nowrap;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab.active {
+      background: #2E7D32;
+      color: #fff;
+      border-color: #2E7D32;
+    }
+    .tab:hover:not(.active) { background: #f0f7f0; border-color: #a5d6a7; }
+
+    .week-content { padding: 1rem 1.5rem 1.5rem; }
+
+    .week-header { margin-bottom: 0.75rem; }
+    .week-title { font-size: 15px; font-weight: 600; color: #1a1a1a; }
+    .week-sub { font-size: 12px; color: #8faa8f; font-style: italic; margin-top: 3px; line-height: 1.4; }
+
+    .progress-wrap { margin: 10px 0 1.25rem; }
+    .progress-bar {
+      height: 4px;
+      background: #e8f5e9;
+      border-radius: 4px;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #2E7D32, #66bb6a);
+      border-radius: 4px;
+      transition: width 0.4s ease;
+    }
+    .progress-label {
+      font-size: 11px;
+      color: #2E7D32;
+      font-weight: 500;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .category { margin-bottom: 1.25rem; }
+    .cat-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #2E7D32;
+      margin-bottom: 6px;
+      padding-bottom: 5px;
+      border-bottom: 1.5px solid #e8f5e9;
+    }
+
+    .item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 6px 8px;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.1s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .item:hover { background: #f9fff9; }
+    .item:active { background: #f0f7f0; }
+
+    .checkbox {
+      width: 18px;
+      height: 18px;
+      border: 1.5px solid #a5d6a7;
+      border-radius: 4px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s;
+      background: #fff;
+    }
+    .checkbox.checked {
+      background: #2E7D32;
+      border-color: #2E7D32;
+    }
+    .checkbox.checked::after {
+      content: '';
+      width: 9px;
+      height: 5px;
+      border-left: 2px solid #fff;
+      border-bottom: 2px solid #fff;
+      transform: rotate(-45deg) translate(1px, -1px);
+      display: block;
+    }
+
+    .item-text {
+      font-size: 14px;
+      color: #333;
+      line-height: 1.4;
+      transition: color 0.15s;
+      flex: 1;
+    }
+    .item-text.checked {
+      text-decoration: line-through;
+      color: #b0c4b1;
+    }
+
+    .new-badge {
+      font-size: 10px;
+      color: #2E7D32;
+      background: #e8f5e9;
+      border: 1px solid #c8e6c9;
+      border-radius: 4px;
+      padding: 1px 6px;
+      flex-shrink: 0;
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    .footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.5rem;
+      border-top: 1px solid #e8f5e9;
+      background: #f9fff9;
+    }
+    .count { font-size: 12px; color: #6a8f6b; }
+    .reset-btn {
+      font-size: 12px;
+      color: #6a8f6b;
+      cursor: pointer;
+      border: none;
+      background: none;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      border: 1px solid #c8e6c9;
+      transition: all 0.15s;
+    }
+    .reset-btn:hover { background: #e8f5e9; color: #2E7D32; }
+
+    .branding {
+      text-align: center;
+      padding: 1rem;
+      font-size: 11px;
+      color: #a5c4a6;
+      letter-spacing: 0.05em;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-top">
+      <div class="header-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 7H5a2 2 0 00-2 2v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2zm0 12H5V9h14v10zM9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zM7 3h2v3H7zm4 0h2v3h-2zm4 0h2v3h-2z"/></svg>
+      </div>
+      <h1>Lista della spesa</h1>
+    </div>
+    <p>Reset Infiammatorio — seleziona la settimana e spunta mentre fai la spesa</p>
+  </div>
+
+  <div class="tabs" id="tabs"></div>
+  <div class="week-content" id="content"></div>
+  <div class="footer">
+    <span class="count" id="count"></span>
+    <button class="reset-btn" onclick="resetWeek()">Azzera spunta</button>
+  </div>
+</div>
+
+<div class="branding">Reset Infiammatorio</div>
+
+<script>
+const weeks = [
+  {
+    num: 1,
+    title: "Settimana 1 — Alleggerire e calmare",
+    sub: "Tutto quello che ti serve per iniziare il percorso",
+    categories: [
+      { name: "Proteine", items: ["Filetti di pesce bianco (platessa, sogliola o merluzzo)","Petto di pollo o tacchino","Uova","Tofu morbido"]},
+      { name: "Cereali e legumi", items: ["Avena (fiocchi)","Riso integrale","Quinoa","Farro integrale","Ceci (secchi o in barattolo)","Orzo perlato"]},
+      { name: "Verdure", items: ["Zucchine","Carote","Broccoli","Spinaci","Finocchio","Zucca","Porri","Patate dolci"]},
+      { name: "Frutta", items: ["Mela","Pera","Frutti di bosco (freschi o surgelati)","Banana"]},
+      { name: "Grassi e semi", items: ["Olio extravergine d'oliva","Noci","Mandorle","Semi di lino","Semi di zucca","Burro di mandorle (senza zucchero)"]},
+      { name: "Latticini e alternative", items: ["Yogurt bianco intero (o yogurt di cocco)","Ricotta magra","Latte di mandorla (senza zucchero)"]},
+      { name: "Dispensa", items: ["Zenzero fresco","Curcuma in polvere","Limoni","Brodo vegetale o di ossa"]}
+    ]
+  },
+  {
+    num: 2,
+    title: "Settimana 2 — Stabilizzare e proteggere",
+    sub: "Gli alimenti con ✦ sono nuovi rispetto alla settimana 1",
+    categories: [
+      { name: "Proteine", items: ["Filetti di pesce bianco (platessa, sogliola o merluzzo)","Petto di pollo o tacchino","Uova","Tofu morbido",{t:"Salmone affumicato",n:true},{t:"Sgombro al naturale in barattolo",n:true},{t:"Tonno al naturale in barattolo",n:true}]},
+      { name: "Cereali e legumi", items: ["Avena (fiocchi)","Riso integrale","Quinoa","Farro integrale","Ceci (secchi o in barattolo)","Orzo perlato",{t:"Lenticchie rosse",n:true},{t:"Piadina integrale",n:true}]},
+      { name: "Verdure", items: ["Zucchine · Carote · Broccoli · Spinaci · Finocchio","Zucca · Porri · Patate dolci",{t:"Cavolo nero",n:true},{t:"Rucola",n:true},{t:"Avocado",n:true},{t:"Piselli freschi o surgelati",n:true},{t:"Pomodorini",n:true}]},
+      { name: "Frutta", items: ["Mela · Pera · Frutti di bosco · Banana",{t:"Arancia",n:true}]},
+      { name: "Grassi e semi", items: ["Olio extravergine d'oliva · Noci · Mandorle","Semi di lino · Semi di zucca","Burro di mandorle",{t:"Semi di chia",n:true}]},
+      { name: "Latticini e alternative", items: ["Yogurt bianco intero (o di cocco)","Latte di mandorla",{t:"Yogurt greco",n:true}]},
+      { name: "Dispensa", items: ["Zenzero · Curcuma · Limoni · Brodo",{t:"Hummus di ceci",n:true},{t:"Cioccolato fondente min. 85%",n:true}]}
+    ]
+  },
+  {
+    num: 3,
+    title: "Settimana 3 — Rinforzare e recuperare",
+    sub: "Gli alimenti con ✦ sono nuovi rispetto alla settimana 2",
+    categories: [
+      { name: "Proteine", items: ["Filetti di pesce bianco · Pollo · Uova · Tofu","Salmone affumicato · Sgombro · Tonno al naturale",{t:"Salmone fresco",n:true},{t:"Sardine o alici in barattolo",n:true}]},
+      { name: "Fermentati — cerca non pastorizzati", items: [{t:"Kefir (reparto frigo)",n:true},{t:"Crauti non pastorizzati (reparto frigo o bio)",n:true},{t:"Miso in pasta (barattolo piccolo)",n:true},{t:"Kimchi — facoltativo (reparto frigo o negozi bio)",n:true}]},
+      { name: "Prebiotici — aggiungi gradualmente", items: ["Cipolla · Aglio · Porro",{t:"Asparagi",n:true},{t:"Banane leggermente acerbe",n:true},{t:"Cicoria o radicchio",n:true},{t:"Carciofi (se di stagione)",n:true}]},
+      { name: "Verdure e frutta", items: ["Zucchine · Carote · Broccoli · Spinaci · Zucca","Cavolo nero · Rucola · Avocado",{t:"Cavolfiore",n:true},{t:"Mirtilli freschi o surgelati",n:true}]},
+      { name: "Grassi e semi", items: ["Olio extravergine d'oliva · Noci · Mandorle","Semi di lino · Semi di zucca · Semi di chia",{t:"Semi di canapa",n:true},{t:"Nocciole",n:true},{t:"Tahini (pasta di sesamo)",n:true}]},
+      { name: "Cereali e legumi", items: ["Avena · Riso integrale · Quinoa · Farro · Orzo","Ceci · Lenticchie rosse",{t:"Edamame surgelati",n:true}]},
+      { name: "Dispensa", items: ["Zenzero · Curcuma · Limoni · Brodo","Hummus · Cioccolato fondente min. 85%"]}
+    ]
+  },
+  {
+    num: 4,
+    title: "Settimana 4 — Integrare e rendere sostenibile",
+    sub: "Gli alimenti con ✦ sono le reintroduzioni da testare",
+    categories: [
+      { name: "Proteine", items: ["Filetti di pesce bianco · Pollo · Uova · Tofu","Salmone · Sgombro · Tonno · Sardine","Kefir"]},
+      { name: "Cereali e legumi", items: ["Avena · Riso integrale · Quinoa · Farro · Orzo","Ceci · Lenticchie · Edamame",{t:"Pasta integrale",n:true},{t:"Pane di segale integrale",n:true}]},
+      { name: "Fermentati e prebiotici", items: ["Kefir · Crauti · Miso","Cipolla · Aglio · Porro · Asparagi · Cicoria","Banane leggermente acerbe"]},
+      { name: "Verdure e frutta", items: ["Tutte le verdure delle settimane precedenti",{t:"Cavolo riccio (kale)",n:true},{t:"Germogli di alfa-alfa",n:true},"Mirtilli · Frutti di bosco · Mela · Pera · Banana"]},
+      { name: "Grassi e semi", items: ["Olio extravergine · Noci · Mandorle · Nocciole","Semi di lino · Zucca · Chia · Canapa","Burro di mandorle · Tahini"]},
+      { name: "Latticini — reintroduci uno alla volta", items: ["Yogurt bianco intero · Yogurt greco · Kefir",{t:"Parmigiano o pecorino — testa per primo",n:true},{t:"Ricotta · Formaggio fresco",n:true},{t:"Latte intero — testa per ultimo",n:true}]},
+      { name: "Dispensa", items: ["Zenzero · Curcuma · Limoni · Brodo","Hummus · Cioccolato fondente min. 85%",{t:"Datteri",n:true},{t:"Cardamomo in polvere",n:true}]}
+    ]
+  }
+];
+
+let currentWeek = 0;
+const checked = {};
+
+function getKey(w,c,i){ return w+'-'+c+'-'+i; }
+
+function getAllKeys(){
+  var w=weeks[currentWeek], keys=[];
+  w.categories.forEach(function(cat,ci){
+    cat.items.forEach(function(_,ii){ keys.push(getKey(currentWeek,ci,ii)); });
+  });
+  return keys;
+}
+
+function renderTabs(){
+  document.getElementById('tabs').innerHTML = weeks.map(function(w,i){
+    return '<div class="tab '+(i===currentWeek?'active':'')+'" onclick="selectWeek('+i+')">Settimana '+w.num+'</div>';
+  }).join('');
+}
+
+function renderContent(){
+  var w=weeks[currentWeek];
+  var allKeys=getAllKeys();
+  var n=allKeys.filter(function(k){return checked[k];}).length;
+  var pct=allKeys.length?Math.round(n/allKeys.length*100):0;
+
+  var html='<div class="week-header"><div class="week-title">'+w.title+'</div><div class="week-sub">'+w.sub+'</div></div>';
+  html+='<div class="progress-wrap"><div class="progress-bar"><div class="progress-fill" style="width:'+pct+'%"></div></div>';
+  if(n>0) html+='<div class="progress-label">'+pct+'% completato</div>';
+  html+='</div>';
+
+  w.categories.forEach(function(cat,ci){
+    html+='<div class="category"><div class="cat-label">'+cat.name+'</div>';
+    cat.items.forEach(function(item,ii){
+      var text=typeof item==='string'?item:item.t;
+      var isNew=typeof item==='object'&&item.n;
+      var key=getKey(currentWeek,ci,ii);
+      var ok=!!checked[key];
+      html+='<div class="item" onclick="toggle(\''+key+'\')">';
+      html+='<div class="checkbox '+(ok?'checked':'')+'"></div>';
+      html+='<span class="item-text '+(ok?'checked':'')+'">'+text+'</span>';
+      if(isNew) html+='<span class="new-badge">✦ nuovo</span>';
+      html+='</div>';
+    });
+    html+='</div>';
+  });
+
+  document.getElementById('content').innerHTML=html;
+  document.getElementById('count').textContent=n+' di '+allKeys.length+' selezionati';
+}
+
+function toggle(key){ checked[key]=!checked[key]; renderContent(); }
+function selectWeek(i){ currentWeek=i; renderTabs(); renderContent(); }
+function resetWeek(){ getAllKeys().forEach(function(k){delete checked[k];}); renderContent(); }
+
+renderTabs();
+renderContent();
+</script>
+</body>
+</html>
